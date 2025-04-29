@@ -1,0 +1,130 @@
+@font-face {
+    font-family: 'Mono';
+    src: url('../fonts/PTMono-Regular.ttf') format('truetype');
+    
+}
+@font-face {
+    font-family: 'headings';
+    src: url(../fonts/BreeSerif-Regular.ttf);
+}
+
+
+div#littleHeader{
+    padding: 10px 0;
+    display: grid;
+    grid-template-columns: repeat(6,8%);
+    gap: 20px;
+    text-align: center;
+    justify-content: center;
+    max-width: 3000px;
+    background-color: #1a2b4d;
+    margin: auto;
+    border-bottom:0.5px solid #fffffda8;
+
+}
+
+#littleHeader a{
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.777);
+    font-size: 0.8rem;
+    padding: 3px;
+}
+
+#littleHeader a:hover{
+    color: rgb(255, 204, 75);
+    text-decoration: underline;
+
+}
+main{
+
+    background-image: url("../../../../static/images/synthwaveBG.jpg");
+    background-color: #0e1935;
+    background-attachment: fixed;
+    background-blend-mode: darken;
+    background-size: cover;
+    background-repeat: no-repeat;
+    
+
+}   
+div.category-preview{
+
+    min-height: 240px;
+    background-size:cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-blend-mode: soft-light;
+    background-color: #0e1935;
+    box-shadow: 0 0 2px #0ff, 0 0 3px #0ff, 0 0 4px #0ff;
+    position: relative;
+
+}
+div.category-preview>h1{
+    margin: 0;
+    font-family: 'headings';
+    letter-spacing: 4px;
+    font-size: 3rem;
+    text-align: center;
+    position: absolute;
+    left: 15%;
+    bottom: 25px;
+    text-shadow: 0 0 1px rgb(0, 165, 165), 0 0 1.5px rgb(1, 189, 189), 0 0 2px rgb(1, 173, 173);
+    
+    
+    
+}
+
+div.books-grid{
+    
+    padding: 0 3%;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(200px, 1fr));
+    gap: 40px;
+    row-gap: 70px;
+    margin: 20px;
+}
+div.books-cards{
+    background-color: rgba(21, 63, 100, 0.815);
+    padding: 20px 12px;
+    border-radius: 6px;
+    box-shadow: 0 0 2px rgb(1, 180, 180), 0 0 3px rgb(1, 176, 176), 0 0 4px rgb(1, 191, 191);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+
+}
+
+div.books-cards>img{
+    max-width: 90%;
+    box-shadow: 0 0 2px #0ff, 0 0 3px #0ff, 0 0 4px #0ff;
+   
+}
+
+div.books-info{
+    margin-top: 8px;   
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+div.books-info>h4 , div.books-info>p{
+    margin: 0;
+    text-align: left;
+}
+
+p.author{
+    font-size: 0.82rem;
+    color: #fffffda9;
+}
+h4.book-title{
+    font-family: 'headings';
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+p.book-price{
+    color: #fffffda9;
+    font-size: 0.85rem;
+}
+
+
+

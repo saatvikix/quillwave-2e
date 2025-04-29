@@ -1,0 +1,91 @@
+{% load static %}
+
+{% block title %}
+<title>Quillwave - Publish New Book</title>
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'quillshelf/css/publish.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="masterContainer">
+    <a href="{% url 'account' %}">
+        <button class="close">
+            <img src="{% static 'images/icons/close.png' %}" alt="">
+        </button>
+    </a> 
+    <h2>Publish New Book</h2>
+
+    <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+    
+        {{ form.non_field_errors }}
+    
+        <div class="title">
+            {{ form.title.errors }}
+            {{ form.title }}
+        </div>
+    
+
+
+        <div class="genre">
+            {{ form.genre.errors }}
+            {{ form.genre }}
+        </div>
+
+        <div class="description">
+            {{ form.description.errors }}
+            {{ form.description }}
+            <div class="char-counter"><span id="charCount">0</span>/600</div>
+        </div>
+
+        <div class="cover">
+            {{ form.cover.errors }}
+            <label for="fileInput" class="custom-file-upload">
+                <span id="fileLabel">Choose a cover image</span>
+            </label>
+            {{ form.cover }}
+        </div>
+
+        <div class="price">
+            {{ form.price.errors }}
+            {{ form.price }}
+        </div>
+
+        <input type="submit" value="Publish Book">
+    </form>
+    
+</div>
+
+<script>
+    // File input handler
+    document.getElementById("fileInput").addEventListener("change", function () {
+        let fileName = this.files[0] ? this.files[0].name : "Choose a cover image";
+        document.getElementById("fileLabel").textContent = fileName;
+    });
+    
+    // Character counter function
+    function countChars(textarea) {
+        var charCount = textarea.value.length;
+        document.getElementById("charCount").textContent = charCount;
+        
+        // Change color when approaching limit
+        if (charCount > 550) {
+            document.getElementById("charCount").style.color = "#ffcc00";
+        } else if (charCount > 590) {
+            document.getElementById("charCount").style.color = "#ff4400";
+        } else {
+            document.getElementById("charCount").style.color = "#0ff";
+        }
+    }
+    
+    // Initialize character count on page load
+    window.addEventListener("load", function() {
+        var description = document.getElementById("id_description");
+        if (description) {
+            countChars(description);
+        }
+    });
+</script>
+{% endblock %}

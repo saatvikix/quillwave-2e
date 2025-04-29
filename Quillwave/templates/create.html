@@ -1,0 +1,54 @@
+
+{% load static %}
+
+{% block title %}
+<title>Quillwave - Create</title>
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/createPage.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="masterContainer">
+    <a href="{% url 'home' %}">
+        <button class="close">
+            <img src="{% static 'images/icons/close.png' %}" alt="">
+        </button>
+    </a> 
+    <h2>Create Post</h2>
+
+    <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+    
+        {{ form.non_field_errors }}
+    
+        <div>
+            {{ form.title.errors }}
+            {{ form.title }}
+        </div>
+    
+        <div>
+            {{ form.body.errors }}
+            {{ form.body }}
+        </div>
+    
+        <div>
+            <label for="fileInput" class="custom-file-upload">
+                <span id="fileLabel">Choose an image</span>
+            </label>
+            {{ form.image }}
+        </div>
+    
+        <input type="submit" value="{% if editing %}Update{% else %}Post{% endif %}">
+    </form>
+    
+</div>
+
+<script>
+    document.getElementById("fileInput").addEventListener("change", function () {
+        let fileName = this.files[0] ? this.files[0].name : "Choose an image";
+        document.getElementById("fileLabel").textContent = fileName;
+    });
+</script>
+{% endblock %}

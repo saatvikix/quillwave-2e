@@ -1,0 +1,96 @@
+body {
+    background-image: url(../../../.././static/images/synthwaveBG.jpg);
+    background-size: cover;
+    background-attachment: fixed;
+    background-blend-mode: darken;
+    
+}
+
+div#heading{
+    width: 70%;
+    margin: auto;
+}
+
+h2 {
+    font-family: 'headings';
+    text-align: left;
+    margin-top: 50px;
+    margin-bottom: 30px;
+    font-size: 2.2rem;
+    letter-spacing: 1px;
+}
+
+.cart-items-container{
+    border: none;
+    width: 70%;
+    margin: auto;
+    min-height: 700px; 
+}
+.cart-item {
+    display: grid;
+    grid-template-columns: 20% 40% 20% 10%;
+    align-items: center;
+    background-color: #152542;
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 0 2px #0ff, 0 0 3px #0ff, 0 0 4px #0ff;
+
+
+}
+
+.cart-item img{
+    box-shadow: 0 0 2px #0ff, 0 0 3px #0ff, 0 0 4px #0ff;
+}
+
+.cart-item-title {
+    font-size: 1.2rem;
+    color: #f4c542;
+}
+
+.cart-item-author {
+    font-size: 0.95rem;
+    color: #ccc;
+}
+
+.cart-item-price {
+    font-family: 'headings';
+    font-size: 1.6rem;
+    letter-spacing: 1px;
+    font-weight: bold;
+    color: #f4c542;
+}
+
+
+
+.total-block {
+    text-align: right;
+    margin-top: 30px;
+    font-size: 1.3rem;
+    border-top: 1px solid #333;
+    padding-top: 15px;
+}
+
+.checkout-btn{
+
+    border: none;
+    background: none;
+    color: white;
+    font-family: 'mono';
+    border: 1px solid white;
+    padding: 10px 20px;
+    font-size: 1.02rem;
+    cursor: pointer;
+    
+}
+
+.checkout-btn:hover{
+    color: #f4c542;
+    text-decoration: underline;
+ 
+}
+#quantity{
+    background: none;
+    border: none;
+    color: white;
+    font-family: 'mono';
+}

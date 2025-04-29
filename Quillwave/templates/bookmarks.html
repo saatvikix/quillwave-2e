@@ -1,0 +1,134 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block title %}
+<title>Saved Posts</title>
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+<style>
+    section {
+        position: relative;
+    }
+
+    .remove-bookmark {
+        background: transparent;
+        border: none;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+    }
+
+    .remove-bookmark img {
+        width: 30px;
+        height: auto;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<main>
+    <h3>Your Bookmarked Posts</h3>
+    <div class="masterContainer" id="allPosts">
+
+        {% if saved_posts %}
+            {% for post in saved_posts %}
+            <section class="postsSection">
+                <div class="metaData">
+                    <div>
+                        {% if post.profile_pic %}
+                            <img src="{{ post.profile_pic }}" alt="Profile" class="profilePic">
+                        {% else %}
+                            <img src="{% static 'images/Blogs/defaultUser.jpg' %}" alt="Profile" class="profilePic">
+                        {% endif %}
+                    </div>
+                    <div class="nameAndTime">
+                        <h4>{{ post.author }}</h4>
+                        <p>{{ post.created_at|date:'F d, Y, h:i A' }}</p>
+                    </div>
+                </div>
+
+                <div class="blogTrailer">
+                    <div class="trailerText" >
+                        <h2><a href="{% url 'view_post' post.id %}" style="text-decoration: none; color: white;">{{ post.title }}</a></h2>
+                        <hr style="margin-top: 10px;">
+                        <p style="margin-top: 30px;">{{ post.body|slice:":200" }}...</p>
+
+                        <div class="trailerIcons">
+                            <button class="like-btn" data-post-id="{{ post.id }}">
+                                <img src="{% static 'images/icons/like2.png' %}" alt="Like"
+                                     class="like-icon {% if post.is_liked %}liked{% endif %}">
+                            </button>
+                            <span id="like-count-{{ post.id }}">{{ post.likes.count }}</span>
+
+                            <button class="iconsButton comment-btn" data-post-id="{{ post.id }}">
+                                <img src="{% static 'images/icons/comment2.png' %}" alt="Comment" class="icons">
+                            </button>
+                            <span id="comment-count-{{ post.id }}">{{ post.comments.count }}</span>
+
+                            <button class="iconsButton share-btn" data-post-id="{{ post.id }}">
+                                <img src="{% static 'images/icons/share2.png' %}" alt="Share" class="icons">
+                            </button>
+
+                            <div class="share-options" id="share-options-{{ post.id }}" style="display: none;">
+                                <a href="#" class="whatsapp-share" data-post-id="{{ post.id }}">
+                                    <img src="{% static 'images/icons/whatsapp.jpg' %}" alt="WhatsApp">
+                                </a>
+                                <a href="#" class="instagram-share" data-post-id="{{ post.id }}">
+                                    <img src="{% static 'images/icons/instagram.jpg' %}" alt="Instagram">
+                                </a>
+                            </div>
+
+                            <div class="editIcons">
+                                {% if request.user == post.author %}
+                                <a class="iconsButton" href="{% url 'edit_post' post.id %}">
+                                    <img src="{% static 'images/icons/edit.png' %}" alt="Edit" class="icons">
+                                </a>
+                                <a class="iconsButton" href="{% url 'delete_post' post.id %}">
+                                    <img src="{% static 'images/icons/delete.png' %}" alt="Delete" class="icons">
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="comment-section" id="comment-section-{{ post.id }}" style="display: none;">
+                            <div class="comments-list" id="comments-list-{{ post.id }}">
+                                {% for comment in post.comments.all %}
+                                <div class="comment">
+                                    <strong>{{ comment.user_email }}</strong>: {{ comment.content }}
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                            <form class="comment-form" data-post-id="{{ post.id }}">
+                                <input type="text" name="content" placeholder="Add a comment..." required>
+                                <button type="submit">Post</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    {% if post.image %}
+                    <div class="trailerImage">
+                        <img src="{{ post.image.url }}" alt="Post Image">
+
+                    </div>
+                    {% endif %}
+                </div>
+
+                <form action="{% url 'bookmark_post' post.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="remove-bookmark" title="Remove bookmark">
+                        <img src="{% static 'images/icons/close.png' %}" alt="Unbookmark">
+                    </button>
+                </form>
+            </section>
+            {% endfor %}
+        {% else %}
+            <p>No bookmarked posts yet.</p>
+        {% endif %}
+
+    </div>
+</main>
+{% endblock %}

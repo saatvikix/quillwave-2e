@@ -1,0 +1,48 @@
+
+{% load static %}
+{% block title %}
+<title>Sign In</title>
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/signin.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="masterContainer">
+    <div class="imageContainer insertContainer"></div>
+    <div class="signInForm insertContainer">
+        <a href="{% url 'index' %}"><img src="{% static 'images/navLogo.png' %}" alt=""></a>
+        <form action="{% url 'login' %}" method="post">
+            {% csrf_token %}
+            <div class="formSections">
+                <label for="user-email">Email</label>
+                <input type="email" id="user-email" class="inputs" name="email" required>
+            </div>
+            <div class="formSections">
+                <label for="user-password">Password</label>
+                <input type="password" id="user-password" class="inputs" name="password" required>
+            </div>
+            <div class="formSections">
+                <a href="{% url 'forgot_password' %}" id="forgot">Forgot password?</a>
+            </div>
+            <div class="formSections">
+                <input type="submit" value="Sign In">
+            </div>
+            <div class="formSections">
+                <p>New to Quillwave? <a href="{% url 'register' %}">Register</a></p>
+            </div>
+
+            {% if messages %}
+            <div class="flash-messages">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </form>
+    </div>
+</div>
+{% endblock %}

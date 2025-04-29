@@ -1,0 +1,103 @@
+{% extends 'quillshelf/base.html' %}
+{% load static %}
+
+{% block title %}
+    <title>Quillshelf - Home</title>
+{% endblock %}
+{% block styles %}
+  <link rel="stylesheet" href="{% static 'quillshelf/css/home.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<main>
+    <div class="promotionBlock">
+        <img src="{% static 'quillshelf/images/books-background2.png' %}" alt="" style="width: 100%;">
+        <div id="promotion-slogan">
+            <h1>Find your brain food</h1>
+            <p>Because we know how much you love reading</p>
+        </div>
+        
+    </div>
+
+    <div class="promisesContainer" style="margin-top: 20px;">
+        <div class="promises-cards">
+            <img src="{% static 'quillshelf/images/icons/fast-delivery.png' %}" alt="promise" class="promises-icon">
+            <div class="promises-text">
+                <h4>Quick Delivery</h4>
+                <p>Just 10 days!</p>
+            </div>
+        </div>
+        <div class="promises-cards">
+            <img src="{% static 'quillshelf/images/icons/secure.png' %}" alt="promise" class="promises-icon">
+            <div class="promises-text">
+                <h4>Secure Payment</h4>
+                <p>Safe payment gateways</p>
+            </div>
+        </div>
+        <div class="promises-cards">
+            <img src="{% static 'quillshelf/images/icons/quality.png' %}" alt="promise" class="promises-icon">
+            <div class="promises-text">
+                <h4>Best Quality</h4>
+                <p>Epitome of premium quality</p>
+            </div>
+        </div>
+        <div class="promises-cards">
+            <img src="{% static 'quillshelf/images/icons/return.png' %}" alt="promise" class="promises-icon">
+            <div class="promises-text">
+                <h4>Easy Returns</h4>
+                <p>100% money back guaranteed</p>
+            </div>
+        </div>
+    </div>
+
+
+</main>
+
+
+
+
+<div id="categories" style="margin-top: 70px;  background-image: url({% static 'images/synthwaveBG.jpg'%})  ;">
+    <h2>Categories</h2>
+
+
+
+
+    <div class="categories-container">
+        <a href="{% url 'category_view' 'fiction-fantasy' %}" class="categories-cards">
+            
+            <img src="{% static 'quillshelf/images/categories/fantasy.jpg' %}" alt="Image">
+            <p>Fiction/Fantasy</p>
+        </a>
+    
+        <a href="{% url 'category_view' 'sci-fi' %}" class="categories-cards">
+            <img src="{% static 'quillshelf/images/categories/sci-fi.jpg' %}" alt="Image">
+            <p>Sci-Fi</p>
+        </a>
+    
+        <a href="{% url 'category_view' 'romance' %}" class="categories-cards">
+            <img src="{% static 'quillshelf/images/categories/romance.jpg' %}" alt="Image">
+            <p>Romance</p>
+        </a>
+    
+        <a href="{% url 'category_view' 'thriller' %}" class="categories-cards">
+            <img src="{% static 'quillshelf/images/categories/thriller.jpg' %}" alt="Image">
+            <p>Thriller</p>
+        </a>
+    
+        <a href="{% url 'category_view' 'mystery' %}" class="categories-cards">
+            <img src="{% static 'quillshelf/images/categories/mystery.jpg' %}" alt="Image">
+            <p>Mystery</p>
+        </a>
+    
+        <a href="{% url 'category_view' 'other' %}" class="categories-cards">
+            <img src="{% static 'quillshelf/images/categories/other.jpg' %}" alt="Image">
+            <p>Other</p>
+        </a>
+    </div>
+    
+
+
+
+</div>
+{% endblock %}

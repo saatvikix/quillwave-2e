@@ -1,0 +1,62 @@
+div.masterContainer {
+    position: relative;
+    display: flex;
+     /* Push links to the right */
+    align-items: center; /* Center items vertically */
+    /* border: 2px solid yellow; */
+    min-height: 60px;
+     /* Add some padding */
+}
+header{
+   
+    position:sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #0e1935;
+    border-bottom:0.5px solid #fffffd;
+}
+header>div.masterContainer{
+    width: 90%;
+    margin: auto;
+    height: 80px;
+   
+
+}
+div#navLinks {
+
+    display: flex;
+    position: absolute;
+    top: 10;
+    right: 0;
+
+    align-items: center; /* Ensure vertical alignment */
+    gap: 15px; /* Space between nav items */
+}
+
+div.navItems {
+  
+    
+    /* border: 2px solid red; */
+    padding: 10px 15px; /* Add padding */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+navItems#user>img{
+    border-radius: 50%;
+    height: 1px;
+}
+
+header a{
+    color: #fffffd;
+    text-decoration: none;
+}
+header a:hover{
+
+    color: #f4c542;
+    text-decoration: underline;
+}
+header img{
+    height: 68px;
+}

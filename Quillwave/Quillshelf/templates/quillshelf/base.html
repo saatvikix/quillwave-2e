@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  {% block title %}
+  <title>Document</title>
+  {% endblock %}
+  {% block styles %}
+  <link rel="stylesheet" href="{% static 'css/index.css' %}">
+  {% endblock %}
+</head>
+
+<body>
+  <header>
+    <div class="masterContainer">
+      <div>
+        <a href="{% url 'quillshelf_home' %}"><img src="{% static 'quillshelf/images/qs_logo.png' %}" alt="Logo"></a>
+      </div>
+      <div id="navLinks">
+        
+        {% block nav_items %}
+
+
+        <div class="navItems"><a href="{% url 'home' %}">Quillwave</a></div>
+        <div class="navItems"><a href="{% url 'view_cart' %}">Cart</a></div>
+        <div class="navItems"><a href="{% url 'account' %}">Account</a></div>
+        {% endblock %}
+
+        <!-- Show "Logout" If User Is Logged In, Otherwise Show "Sign In" -->
+        {% if request.user.is_authenticated %}
+        <div class="navItems"><a href="{% url 'logout' %}">Logout</a></div>
+        {% else %}
+        <div class="navItems"><a href="{% url 'login' %}">Sign in</a></div>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  {% block content %}
+  <main>
+
+  </main>
+  {% endblock %}
+
+  <hr>
+
+  <footer>
+    <div class="footerContainer">
+      <div class="footerLinks">
+        <a href="{% url 'about' %}">About</a>
+        <a href="{% url 'contact' %}">Contact</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+      <p>&copy; 2025 Quillwave. All rights reserved.</p>
+    </div>
+  </footer>
+
+</body>
+
+</html>

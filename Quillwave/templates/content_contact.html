@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Form | Quillwave</title>
+</head>
+<body>
+    <form action="" method="post" class="form-example">
+        {% csrf_token %}
+        
+        <div class="form-example">
+            <label for="subject">Enter your subject: </label>
+            <input type="text" name="subject" id="subject" required />
+        </div>
+
+        <div class="form-example">
+            <label for="content">Enter your content: </label>
+            <textarea name="message" id="content" required></textarea>
+        </div>
+
+        <div class="form-example">
+            <input type="submit" value="Send Message" />
+        </div>
+    </form>
+</body>
+</html>

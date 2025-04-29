@@ -1,0 +1,74 @@
+{% extends 'quillshelf/base.html' %}
+{% load static %}
+{% load cart_filters %}
+
+{% block title %}<title>Your Cart</title>{% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="{% static 'quillshelf/css/home.css' %}">
+<link rel="stylesheet" href="{% static 'quillshelf/css/cart.css' %}">
+{% endblock %}
+
+{% block content %}
+<div id="heading">
+    <h2>Your Cart</h2>
+</div>
+
+<form method="POST">
+    {% csrf_token %}
+    <div class="cart-items-container">
+        {% if books %}
+            {% for book in books %}
+            <div class="cart-item">
+                <div>
+                    <img src="{{ book.cover.url }}" alt="" style="width: 80px;">
+                </div>
+                <div>
+                    <p class="cart-item-title">{{ book.title }}</p>
+                    <p class="cart-item-author">by {{ book.author }}</p>
+                </div>
+                <div class="cart-item-price">
+                    ${{ book.price }}
+                    <br>
+                    <label for="quantity_{{ book.id }}" style="font-size: 0.9rem;">Qty:</label>
+                    <input type="number" name="quantity_{{ book.id }}" value="{{ quantities|get_item:book.id|default:1 }}"
+                    min="1" style="width: 60px;" id="quantity">
+
+                </div>
+                <div id="remove">
+                    <a href="{% url 'remove_from_cart' book.id %}">
+                        <img src="{% static '/images/icons/delete.png' %}" style="width: 25px; box-shadow: none;" alt="">
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+
+            <div class="total-block">
+                <span style="color: #f4c542; font-weight: 600;">Total: </span>${{ total }}
+            </div>
+
+            <div class="cart-actions" style="text-align: center; margin-top: 20px;">
+
+                <button type="submit" name="checkout" class="checkout-btn">Checkout</button>
+            </div>
+
+        {% else %}
+            <p style="text-align: center; color: #aaa;">Your cart is empty.</p>
+        {% endif %}
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const quantityInputs = document.querySelectorAll('input[type="number"][name^="quantity_"]');
+    
+            quantityInputs.forEach(input => {
+                input.addEventListener('change', () => {
+                    input.form.submit();
+                });
+            });
+        });
+    </script>
+    
+
+
+</form>
+{% endblock %}

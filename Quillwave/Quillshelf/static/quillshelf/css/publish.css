@@ -1,0 +1,190 @@
+@font-face {
+    font-family: 'Mono';
+    src: url('../fonts/PTMono-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'headings';
+    src: url(../fonts/BreeSerif-Regular.ttf);
+}
+
+h2 {
+    font-family: 'headings';
+    text-align: center;
+    letter-spacing: 2px;
+}
+
+body {
+    background-color: #0e1935;
+    background-image: url("../../../../static/images/synthwaveBG.jpg");
+    background-size: cover;
+    background-attachment: fixed;
+    background-blend-mode: darken;
+    color: #fffffd;
+}
+
+.close {
+    background-color: #0e193500;
+    border: 0;
+    position: absolute;
+    top: 20px;
+    left: 94%;
+    cursor: pointer;
+}
+
+.close img {
+    width: 30px;
+}
+
+.close:hover {
+    scale: 1.1;
+}
+
+/* Form inputs styling */
+input, textarea, select {
+    border: 0.5px solid white;
+    padding: 8px 10px;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    background-color: #0e193500;
+    border-bottom: 0.5px solid #fffffd;
+    font-family: 'mono';
+    letter-spacing: 1px;
+    font-size: 1.01rem;
+    color: #fffffd;
+    margin: auto;
+    border-radius: 5px;
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    color: #fffffd;
+    box-shadow: 0 0 2px #0ff;
+}
+
+/* Title input specific */
+div.title input {
+    height: 50px;
+    font-family: 'headings';
+    letter-spacing: 2px;
+    font-size: 1.2rem;
+}
+
+/* Description textarea specific */
+textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+/* Character counter styling */
+.char-counter {
+    font-family: 'Mono';
+    font-size: 0.8rem;
+    color: #0ff;
+    text-align: right;
+    margin-top: 5px;
+    margin-right: 10px;
+}
+
+#charCount {
+    color: #0ff;
+}
+
+input[type="submit"] {
+    position: absolute;
+    font-family: 'mono';
+    background-color: #0e1935;
+    color: #fffffd;
+    border: 1px solid #fffffd;
+    width: 140px;
+    height: 40px;
+    box-shadow: 0 0 2px #0ff, 0 0 6px #0ff, 0 0 8px #0ff;
+    right: 25px;
+    bottom: 20px;
+}
+
+input[type="submit"]:hover {
+    cursor: pointer;
+    scale: 1.1;
+    transition: ease-in-out 0.2s;
+}
+
+.masterContainer {
+    margin: auto;
+    margin-top: 60px;
+    max-width: 1000px;
+    min-height: 700px; /* Increased to accommodate more fields */
+    box-shadow: 0 0 2px #0ff, 0 0 6px #0ff, 0 0 8px #0ff;
+    position: relative;
+    background-color: #0e19358d;
+    padding: 10px 30px;
+    box-sizing: border-box;
+}
+
+form {
+    margin-top: 50px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 35px;
+}
+
+.custom-file-upload {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #0e1935;
+    color: gold;
+    padding: 10px 15px;
+    border: 1px solid #fffffd;
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: 'Mono';
+    box-shadow: 0 0 2px #0ff;
+}
+
+.custom-file-upload:hover {
+    box-shadow: 0 0 4px #0ff, 0 0 8px #0ff;
+    transition: ease-in-out 0.2s;
+}
+
+/* This is the crucial part - hide the actual file input */
+#fileInput {
+    display: none !important;
+}
+
+span {
+    font-size: 9pt;
+    color: gold;
+}
+
+/* Specific for genre select dropdown */
+select {
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 30px; /* Make room for the dropdown arrow */
+}
+
+/* Style the dropdown options */
+select option {
+    background-color: #0e1935;
+    color: #fffffd;
+    padding: 10px;
+}
+
+/* Style the empty option differently */
+select option:first-child {
+    color: #aaaabb;
+}
+
+/* Price field specific styling */
+div.price input {
+    width: 200px;
+}

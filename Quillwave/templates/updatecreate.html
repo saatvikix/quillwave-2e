@@ -1,0 +1,46 @@
+{% extends "index.html" %}
+
+{% block title %}
+<title>Quillwave - Create</title>
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/createPage.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="masterContainer">
+    <a href="{% url 'home' %}">
+        <button class="close">
+            <img src="{% static 'images/icons/close.png' %}" alt="">
+        </button>
+    </a> 
+    <h2>Create Post</h2>
+
+    <section class="form">
+        <form action="{% url 'update' data.id %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div>
+                <input type="text" name="title" class="inputs" id="titleInput" placeholder="Give it a heading" value="{{ data.title }}" required>
+            </div>
+            <div>
+                <textarea name="content" class="inputs" id="blog" placeholder="Write your blog..." required>{{ data.content }}</textarea>
+            </div>
+            <div>
+                <label for="fileInput" class="custom-file-upload">
+                    <span id="fileLabel">Choose an image</span>
+                </label>
+                <input type="file" id="fileInput" name="image" accept="image/*">
+            </div>
+            <input type="submit" value="Post">
+        </form>
+    </section>
+</div>
+
+<script>
+    document.getElementById("fileInput").addEventListener("change", function () {
+        let fileName = this.files[0] ? this.files[0].name : "Choose an image";
+        document.getElementById("fileLabel").textContent = fileName;
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,134 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=\, initial-scale=1.0">
+    <title>Quillwave - User Profile</title>
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+
+</head>
+
+<body>
+    <header>
+        <div class="masterContainer">
+            <div>
+                <a href="{% url 'index' %}"><img src="{% static 'images/navLogo.png' %}" alt=""></a>
+            </div>
+            <div id="navLinks">
+                {% if request.user.is_authenticated %}
+                <div class="navItems">
+                    <span id="user"><a href="{% url 'profile' %}">{{ request.user.first_name }}</a></span>
+                </div>
+                {% endif %}
+
+                {% block nav_items %}
+                <div class="navItems"><a href="{% url 'about' %}">About</a></div>
+                <div class="navItems"><a href="{% url 'contact' %}">Contact</a></div>
+                {% endblock %}
+
+                {% if request.user.is_authenticated %}
+                <div class="navItems"><a href="{% url 'logout' %}">Logout</a></div>
+                {% else %}
+                <div class="navItems"><a href="{% url 'signin' %}">Sign in</a></div>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <section id="coverPhoto">
+        <div class="bigProfilePic">
+            {% if profile_pic %}
+            <img src="{{ profile_pic }}" alt="Profile Picture">
+            {% else %}
+            <img src="{% static 'images/Blogs/defaultUser.png' %}" alt="Default Profile Picture">
+            {% endif %}
+
+        </div>
+    </section>
+
+    <section>
+        <div id="metaData">
+            <div class="metaDataKids">
+                <div>
+                    <h3>{{ user.username }}</h3>
+                </div>
+                <div class="location">
+                    <img src="{% static 'images/icons/location.png' %}" alt="">
+                    <p>{{ location|default:"Location not set" }}</p>
+
+                </div>
+            </div>
+            <div id="numbersNcreate">
+                <div class="create">
+                    <a href="{% url 'add_info' %}"><img src="{% static 'images/icons/create2.png' %}" alt=""></a>
+                    <p>Add info</p>
+                </div>
+                <div class="numbers">
+                    <div>
+                        <h3>{{ post_count }}</h3>
+                        <p>Posts</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main>
+        <div class="masterContainer">
+            {% if posts %}
+            {% for post in posts %}
+            <div class="postCards">
+                <div class="trailerText">
+                    <h2>
+                        <a href="{% url 'view_post' post.id %}" style="text-decoration: none; color: white;">
+                            {{ post.title }}
+                        </a>
+                    </h2>
+                    <hr>
+                    <p>{{ post.body|truncatechars:100 }}</p>
+                    <div class="trailerIcons">
+                        <button class="iconsButton"><img src="{% static 'images/icons/like2.png' %}" alt="Like"
+                                class="icons"></button>
+                        <button class="iconsButton"><img src="{% static 'images/icons/comment2.png' %}" alt="Comment"
+                                class="icons"></button>
+                        <button class="iconsButton"><img src="{% static 'images/icons/share2.png' %}" alt="Share"
+                                class="icons"></button>
+                        <button class="iconsButton"><img src="{% static 'images/icons/save2.png' %}" alt="Save"
+                                class="icons"></button>
+                    </div>
+                    <div class="editIcons">
+                        <a class="iconsButton" href="{% url 'edit_post' post.id %}"><img
+                                src="{% static 'images/icons/edit.png' %}" alt="Edit" class="icons"></a>
+                        <a class="iconsButton" href="{% url 'delete_post' post.id %}"><img
+                                src="{% static 'images/icons/delete.png' %}" alt="Delete" class="icons"></a>
+                    </div>
+                </div>
+                {% if post.image %}
+                <div class="trailerImage">
+                    <img src="{{ post.image.url }}" alt="Post Image" />
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            {% else %}
+            <p>No posts yet. Start creating!</p>
+            {% endif %}
+        </div>
+    </main>
+
+    <footer>
+        <div class="footerContainer">
+            <div class="footerLinks">
+                <a href="#">About</a>
+                <a href="#">Contact</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+            <p>&copy; 2025 Quillwave. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+
+</html>

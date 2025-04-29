@@ -1,0 +1,127 @@
+{% extends 'Quillshelf/base.html' %}
+
+{% load static %}
+
+{% block title %}
+    <title>Quillshelf - Fiction/Fantasy</title>
+{% endblock %}
+{% block styles %}
+  <link rel="stylesheet" href="{% static 'quillshelf/css/home.css' %}">
+  <link rel="stylesheet" href="{% static 'quillshelf/css/category_books.css' %}">
+{% endblock %}
+
+{% block nav_items %}
+              
+<div class="navItems" style="margin-right: 80px;
+                             display: flex;
+                             align-items: center;">
+  <form action="#" method="GET" class="search-form" >
+    <input
+      type="text"
+      name="q"
+      placeholder="Search books..."
+      value="{{ search_query|default:'' }}"
+      class="search-input"
+      style="
+      background-color: rgba(21, 63, 100, 0);
+      color: #fffffda9;
+      width: 220px;
+      border: 0.4px solid #fffffd7c;
+      border-radius: 3px;
+      padding: 8px;
+      font-family: 'mono';"
+    />
+    <button type="button" id="VSB" title="Speak your search" style="margin-left: 10px;">🎙</button>
+    <button type="submit" class="search-btn"
+    style="background-color: rgba(21, 63, 100, 0); border: none;">
+        <img src="{% static 'images/icons/search.png' %}" alt=""
+        style="width: 17px; height: 17px;">
+    </button>
+  </form>
+</div>
+
+
+<div class="navItems"><a href="{% url 'view_cart' %}">Cart</a></div>
+<div class="navItems"><a href="{% url 'account' %}">Account</a></div>
+{% endblock %}
+
+
+
+
+
+{% block content %}
+
+<div id="littleHeader">
+    <a href="{% url 'category_view' 'fiction-fantasy' %}" class="little-header-items">Fiction/Fantasy</a>
+    <a href="{% url 'category_view' 'sci-fi' %}" class="little-header-items">Sci-Fi</a>
+    <a href="{% url 'category_view' 'romance' %}" class="little-header-items">Romance</a>
+    <a href="{% url 'category_view' 'thriller' %}" class="little-header-items">Thriller</a>
+    <a href="{% url 'category_view' 'mystery' %}" class="little-header-items">Mystery</a>
+    <a href="{% url 'category_view' 'other' %}" class="little-header-items">Other</a>
+</div>
+
+<main>
+    <div class="category-preview" style="background-image: url({% static 'quillshelf/images/category_books/preview.jpg' %});">
+        <h1>{{ genre }}</h1>
+    </div>
+
+
+    <div class="books-grid" style="margin-top: 30px;">
+        <div class="books-grid" style="margin-top: 30px;">
+            {% for book in books %}
+            <a href="{% url 'book_detail' book.id %}" style="text-decoration: none; color: inherit;">
+                <div class="books-cards">
+                    <img src="{{ book.cover.url }}" alt="{{ book.title }}" class="book-cover">
+                    <div class="books-info">
+                        <p class="author">{{ book.author }}</p>
+                        <h4 class="book-title">{{ book.title }}</h4>
+                        <p class="book-price">${{ book.price }}</p>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        
+    </div>
+</main>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const voiceSearchBtn = document.getElementById("VSB");
+        const searchInput = document.querySelector(".search-input");
+    
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+    
+            recognition.continuous = false;  // Stop after one result
+            recognition.lang = 'en-US';      // Set language
+            recognition.interimResults = false;
+    
+            voiceSearchBtn.addEventListener("click", function () {
+                recognition.start();
+            });
+    
+            recognition.onresult = function (event) {
+                const transcript = event.results[0][0].transcript;
+                searchInput.value = transcript;
+    
+                // Optional: Auto-submit the form
+                searchInput.form.submit();
+            };
+    
+            recognition.onerror = function (event) {
+                console.error("Speech recognition error:", event.error);
+                alert("Voice search failed: " + event.error);
+            };
+        } else {
+            alert("Speech recognition is not supported in this browser.");
+        }
+    });
+    
+        const VSB = document.getElementById("VSB");
+        VSB.classList.add("listening");
+        recognition.onend = () => {
+            VSB.classList.remove("listening");
+        };
+    </script>
+{% endblock %}

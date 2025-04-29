@@ -1,0 +1,16 @@
+{% extends 'quillshelf/base.html' %}
+{% block title %}<title>Order Successful</title>{% endblock %}
+
+{% block content %}
+<main class="masterContainer" style="text-align: center; padding: 100px 0;
+                                background-image: url(../../../../static/images/synthwaveBG.jpg);
+                                background-attachment: fixed;
+                                background-size: cover;"
+                                >
+    <h2 style="color: #f4c542;">✅ Order Successful!</h2>
+    <p>Thanks for shopping with Quillshelf.</p>
+    <a href="{% url 'quillshelf_home' %}" class="btn-go-home"
+        style="text-decoration: none;
+        color: #f4c542;;">Continue Shopping</a>
+</main>
+{% endblock %}

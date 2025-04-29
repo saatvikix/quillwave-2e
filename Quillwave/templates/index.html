@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  {% block title %}
+  <title>Quillwave</title>
+  {% endblock %}
+  {% block styles %}
+  <link rel="stylesheet" href="{% static 'css/index.css' %}">
+
+  {% endblock %}
+</head>
+
+<body>
+  <header>
+    <div class="masterContainer">
+      <div>
+        <a href="{% url 'index' %}"><img src="{% static 'images/navLogo.png' %}" alt="Logo"></a>
+      </div>
+      <div id="navLinks">
+        
+        {% if request.user.is_authenticated %}
+        <div class="navItems">
+          <span id="user"><a href="{% url 'profile' %}">{{ request.user.first_name }}</a> </span>
+        </div>
+        {% endif %}
+
+        {% block nav_items %}
+        
+      
+        <div class="navItems"><a href="{% url 'about' %}">About</a></div>
+        <div class="navItems"><a href="{% url 'contact' %}">Contact</a></div>
+        {% endblock %}
+
+        <!-- Show "Logout" If User Is Logged In, Otherwise Show "Sign In" -->
+        {% if request.user.is_authenticated %}
+        <div class="navItems"><a href="{% url 'logout' %}">Logout</a></div>
+        {% else %}
+        <div class="navItems"><a href="{% url 'login' %}">Sign in</a></div>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  {% block content %}
+  <main>
+    <div class="masterContainer">
+      <div style="padding: 40px;">
+        <div id="textStuff">
+          <p class="mono" style="color: rgb(207, 191, 128);">Immerse yourself in a world of thoughts and stories</p>
+          <h1>Discover the Thrilling World</h1>
+          <p class="mono" style="color: rgb(246, 248, 226);">Welcome to our captivating blog platform, where we share
+            insightful stories, fresh perspectives, and inspiring ideas to spark your curiosity. </p>
+          <button><a href="{% url 'home' %}">Explore Now</a></button>
+        </div>
+      </div>
+      <div>
+        <img src="{% static 'images/laptop4.jpeg' %}" alt="">
+      </div>
+    </div>
+  </main>
+  {% endblock %}
+
+  <hr>
+
+  <footer>
+    <div class="footerContainer">
+      <div class="footerLinks">
+        <a href="{% url 'about' %}">About</a>
+        <a href="{% url 'contact' %}">Contact</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+      <p>&copy; 2025 YourBrand. All rights reserved.</p>
+    </div>
+  </footer>
+
+</body>
+
+</html>

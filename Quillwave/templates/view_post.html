@@ -1,0 +1,146 @@
+{% extends 'index.html' %}
+
+{% block title %}
+<title>{{ post.title }}</title>
+{% endblock %}
+
+{% block content %}
+<main class="post-container">
+    <div class="post-meta">
+        <h1>{{ post.title }}</h1>
+        <p>
+            By <strong>{{ post.author }}</strong> on 
+            {{ post.created_at|date:"F d, Y, h:i A" }}
+        </p>
+    </div>
+
+    {% if post.image %}
+    <div class="post-image">
+        <img src="{{ post.image.url }}" alt="Post Image" />
+    </div>
+    {% endif %}
+
+    <div class="post-content" id="postText">
+        <p>{{ post.body|linebreaks }}</p>
+
+        <!-- TTS Controls -->
+        <div id="tts-controls" style="margin-top: 20px;"></div>
+    </div>
+
+    <div class="post-actions">
+        <a href="{% url 'home' %}" class="back-button">← Back to Home</a>
+    </div>
+</main>
+
+<!-- TTS Button Styling -->
+<style>
+    .tts-btn {
+        background-color: #4e46e500;
+        color: white;
+        
+        border-radius: 2px;
+        padding: 8px 7px;
+        margin-right: 10px;
+        font-size: 1rem;
+        cursor: pointer;
+        
+        border: 1px solid goldenrod;
+    }
+
+    
+    #speakBtn, #pauseBtn, #resumeBtn{
+        width: 100px;
+        height: 30px;
+        padding: 0;
+
+    }
+    #speakBtn:hover, #pauseBtn:hover, #resumeBtn:hover{
+        background-color: rgba(240, 248, 255, 0);
+    }
+    #tts-controls {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+</style>
+
+<!-- TTS Script -->
+<script>
+    const postText = document.getElementById("postText").innerText.trim();
+    const synth = window.speechSynthesis;
+    let utterance;
+    let isPaused = false;
+    let isSpeaking = false;
+
+    const ttsControls = document.getElementById("tts-controls");
+
+    // Create buttons
+    const speakBtn = document.createElement("button");
+    speakBtn.id = "speakBtn";
+    speakBtn.textContent = "Listen";
+
+    const pauseBtn = document.createElement("button");
+    pauseBtn.id = "pauseBtn";
+    pauseBtn.textContent = "⏸ Pause";
+
+    const resumeBtn = document.createElement("button");
+    resumeBtn.id = "resumeBtn";
+    resumeBtn.textContent = "Resume";
+
+    [speakBtn, pauseBtn, resumeBtn].forEach(btn => {
+        btn.className = "tts-btn";
+        ttsControls.appendChild(btn);
+    });
+
+    pauseBtn.style.display = "none";
+    resumeBtn.style.display = "none";
+
+    speakBtn.addEventListener("click", () => {
+        if (synth.speaking || synth.paused) {
+            synth.cancel();
+            isSpeaking = false;
+            isPaused = false;
+            speakBtn.textContent = "Listen";
+            pauseBtn.style.display = "none";
+            resumeBtn.style.display = "none";
+        } else {
+            if (postText !== "") {
+                utterance = new SpeechSynthesisUtterance(postText);
+                utterance.lang = "en-US";
+                utterance.rate = 1;
+
+                synth.speak(utterance);
+                isSpeaking = true;
+                speakBtn.textContent = "Stop";
+                pauseBtn.style.display = "inline-block";
+                resumeBtn.style.display = "none";
+
+                utterance.onend = () => {
+                    isSpeaking = false;
+                    speakBtn.textContent = "Listen";
+                    pauseBtn.style.display = "none";
+                    resumeBtn.style.display = "none";
+                };
+            }
+        }
+    });
+
+    pauseBtn.addEventListener("click", () => {
+        if (synth.speaking && !synth.paused) {
+            synth.pause();
+            isPaused = true;
+            pauseBtn.style.display = "none";
+            resumeBtn.style.display = "inline-block";
+        }
+    });
+
+    resumeBtn.addEventListener("click", () => {
+        if (synth.paused) {
+            synth.resume();
+            isPaused = false;
+            pauseBtn.style.display = "inline-block";
+            resumeBtn.style.display = "none";
+        }
+    });
+</script>
+{% endblock %}

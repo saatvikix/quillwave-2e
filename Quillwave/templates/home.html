@@ -1,0 +1,296 @@
+{% extends 'index.html' %} {% load static %} {% block title %}
+<title>Quillwave | Home</title>
+{% endblock %} {% block styles %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}" />
+<link rel="stylesheet" href="{% static 'css/comment.css' %}" />
+<link rel="stylesheet" href="{% static 'css/share.css' %}" />
+{% endblock %} {% block nav_items %}
+
+<div class="navItems">
+  <form action="{% url 'search' %}" method="GET" class="search-form">
+    <input
+      type="text"
+      name="q"
+      placeholder="Search posts..."
+      value="{{ search_query|default:'' }}"
+      class="search-input"
+      style="
+        background-color: rgba(21, 63, 100, 0);
+        color: #fffffda9;
+        width: 300px;
+        border: 0.4px solid #fffffd7a;
+        border-radius: 3px;
+        padding: 8px;
+        font-family: 'mono';
+      "
+    />
+    <button type="button" id="VSB" title="Speak your search" style="margin-left: 10px;">🎙</button>
+    <button
+      type="submit"
+      class="search-btn"
+      style="background-color: rgba(21, 63, 100, 0); border: none"
+    >
+      <img
+        src="{% static 'images/icons/search.png' %}"
+        alt=""
+        style="width: 17px; height: 17px"
+      />
+    </button>
+  </form>
+</div>
+<div class="navItems"><a href="{% url 'quillshelf_home' %}">Quillshelf</a></div>
+{% if user.is_authenticated %}
+<div class="navItems"><a href="{% url 'profile' %}">Profile</a></div>
+{% endif %} {% endblock %} {% block content %}
+<main>
+  <div class="masterContainer" id="onYourMind">
+    <section>
+      <div class="textCreator">
+        {% if profile_pic %}
+        <img src="{{ profile_pic }}" alt="Profile" class="profilePic" />
+        {% else %}
+        <img
+          src="{% static 'images/Blogs/defaultUser.png' %}"
+          alt="Profile"
+          class="profilePic"
+        />
+        {% endif %}
+
+        <a href="{% url 'create_post' %}"
+          ><input placeholder="What's on your mind? " readonly
+        /></a>
+      </div>
+      <div class="features">
+        <div>
+          <button>
+            <a href="{% url 'bookmarks' %}"
+              ><img src="{% static 'images/icons/save2.png' %}" alt=""
+            /></a>
+          </button>
+          <button>
+            <img src="{% static 'images/icons/attatch.png' %}" alt="" />
+          </button>
+          <button>
+            <a href="https://www.google.com/maps/@30.5526296,76.6653343,13.4z"
+              ><img src="{% static 'images/icons/location.png' %}" alt=""
+            /></a>
+          </button>
+        </div>
+        <div>
+          <button>Post</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <h3>For You</h3>
+  <div class="masterContainer" id="allPosts">
+    {% if posts %} {% for post in posts %}
+    <section class="postsSection">
+      <div class="metaData">
+        <div class="profilePic">
+          {% if post.author.profile.profile_pic %}
+          <img
+            src="{{ post.author.profile.profile_pic.url }}"
+            alt="Profile"
+            class="profilePic"
+          />
+          {% else %}
+          <img
+            src="{% static 'images/Blogs/defaultUser.png' %}"
+            alt="Profile"
+            class="profilePic"
+          />
+          {% endif %}
+        </div>
+
+        <div class="nameAndTime">
+          <h4>{{ post.author }}</h4>
+          <p>{{ post.created_at|date:"F d, Y, h:i A" }}</p>
+        </div>
+      </div>
+
+      <div class="blogTrailer">
+        <div class="trailerText">
+          <h2>
+            <a
+              href="{% url 'view_post' post_id=post.id %}"
+              class="post-title-link"
+              style="text-decoration: none; color: white"
+            >
+              {{ post.title }}
+            </a>
+          </h2>
+          <hr />
+          <p>{{ post.body|truncatechars:200 }}</p>
+          <div class="trailerIcons">
+            <button class="like-btn" data-post-id="{{ post.id }}">
+              <img
+                src="{% static 'images/icons/like2.png' %}"
+                alt="Like"
+                class="like-icon"
+              />
+            </button>
+            <span id="like-count-{{ post.id }}" style="color: white"
+              >{{ post.likes.count }}</span
+            >
+            <button
+              class="iconsButton comment-btn"
+              data-post-id="{{ post.id }}"
+            >
+              <img
+                src="{% static 'images/icons/comment2.png' %}"
+                alt="Comment"
+                class="icons"
+              />
+            </button>
+            <span id="comment-count-{{ post.id }}"
+              >{{ post.comments.count }}</span
+            >
+
+            <button class="iconsButton share-btn" data-post-id="{{ post.id }}">
+              <img
+                src="{% static 'images/icons/share2.png' %}"
+                alt="Share"
+                class="icons"
+              />
+            </button>
+
+            <!-- Hidden Share Options -->
+            <div
+              class="share-options"
+              id="share-options-{{ post.id }}"
+              style="display: none"
+            >
+              <a href="#" class="whatsapp-share" data-post-id="{{ post.id }}">
+                <img
+                  src="{% static 'images/icons/whatsapp.jpg' %}"
+                  alt="WhatsApp"
+                />
+              </a>
+              <a href="#" class="instagram-share" data-post-id="{{ post.id }}">
+                <img
+                  src="{% static 'images/icons/instagram.jpg' %}"
+                  alt="Instagram"
+                />
+              </a>
+            </div>
+
+            <form
+              action="{% url 'bookmark_post' post_id=post.id %}"
+              method="POST"
+              style="display: inline"
+            >
+              {% csrf_token %}
+              <button type="submit" class="iconsButton">
+                <img
+                  src="{% static 'images/icons/save2.png' %}"
+                  alt="Bookmark"
+                  class="icons"
+                />
+              </button>
+            </form>
+
+            {% if request.user == post.author %}
+            <div class="editIcons">
+              <a
+                class="iconsButton"
+                href="{% url 'edit_post' post_id=post.id %}"
+                ><img
+                  src="{% static 'images/icons/edit.png' %}"
+                  alt=""
+                  class="icons"
+              /></a>
+              <a
+                class="iconsButton"
+                href="{% url 'delete_post' post_id=post.id %}"
+                ><img
+                  src="{% static 'images/icons/delete.png' %}"
+                  alt=""
+                  class="icons"
+              /></a>
+            </div>
+            {% endif %}
+          </div>
+
+          <div class="comment-section" id="comment-section-{{ post.id }}" style="display: none">
+            <div class="comments-list" id="comments-list-{{ post.id }}">
+                {% for comment in post.comments.all %}
+                <div class="comment">
+                    <strong>{{ comment.author }}</strong>: {{ comment.text }}
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Comment Input Box -->
+            <form class="comment-form" data-post-id="{{ post.id }}">
+                {% csrf_token %}
+                <input type="text" name="content" placeholder="Add a comment..." required />
+                <button type="submit">Post</button>
+            </form>
+        </div>
+        </div>
+
+        {% if post.image %}
+        <div class="trailerImage">
+          <img
+            src="{{ post.image.url }}"
+            alt="Post Image"
+            style="width: 300px; height: auto; object-fit: cover"
+          />
+        </div>
+        {% endif %}
+      </div>
+    </section>
+    {% endfor %} {% else %}
+    <p>No posts yet. Be the first to write one!</p>
+    {% endif %}
+  </div>
+</main>
+
+<script src="{% static 'js/like.js' %}"></script>
+<script src="{% static 'js/comment.js' %}"></script>
+<script src="{% static 'js/share.js' %}"></script>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+      const voiceSearchBtn = document.getElementById("VSB");
+      const searchInput = document.querySelector(".search-input");
+  
+      if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+          const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+          const recognition = new SpeechRecognition();
+  
+          recognition.continuous = false;  // Stop after one result
+          recognition.lang = 'en-US';      // Set language
+          recognition.interimResults = false;
+  
+          voiceSearchBtn.addEventListener("click", function () {
+              recognition.start();
+          });
+  
+          recognition.onresult = function (event) {
+              const transcript = event.results[0][0].transcript;
+              searchInput.value = transcript;
+  
+              // Optional: Auto-submit the form
+              searchInput.form.submit();
+          };
+  
+          recognition.onerror = function (event) {
+              console.error("Speech recognition error:", event.error);
+              alert("Voice search failed: " + event.error);
+          };
+      } else {
+          alert("Speech recognition is not supported in this browser.");
+      }
+  });
+  
+      const VSB = document.getElementById("VSB");
+      VSB.classList.add("listening");
+      recognition.onend = () => {
+          VSB.classList.remove("listening");
+      };
+  </script>
+{% endblock %}

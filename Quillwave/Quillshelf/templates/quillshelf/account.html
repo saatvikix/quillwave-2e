@@ -1,0 +1,121 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quillwave - User Account</title>
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <link rel="stylesheet" href="{% static 'quillshelf/css/category_books.css' %}">
+<style>
+    main img{
+        animation: none;
+    }
+</style>
+</head>
+
+<body style="animation: none;">
+    <header>
+        <div class="masterContainer">
+          <div>
+            <a href="{% url 'quillshelf_home' %}"><img src="{% static 'quillshelf/images/qs_logo.png' %}" alt="Logo"></a>
+          </div>
+          <div id="navLinks">
+            
+            {% block nav_items %}
+    
+    
+            <div class="navItems"><a href="{% url 'home' %}">Quillwave</a></div>
+            <div class="navItems"><a href="{% url 'view_cart' %}">Cart</a></div>
+            <div class="navItems"><a href="{% url 'account' %}">Account</a></div>
+            {% endblock %}
+    
+            <!-- Show "Logout" If User Is Logged In, Otherwise Show "Sign In" -->
+            {% if request.user.is_authenticated %}
+            <div class="navItems"><a href="{% url 'logout' %}">Logout</a></div>
+            {% else %}
+            <div class="navItems"><a href="{% url 'login' %}">Sign in</a></div>
+            {% endif %}
+          </div>
+        </div>
+      </header>
+
+    <section id="coverPhoto" style="background-image: url({% static 'quillshelf/images/category_books/preview.jpg' %});">
+        <div class="bigProfilePic">
+            {% if profile_pic %}
+                <img src="{{ profile_pic }}" alt="Profile Picture">
+            {% else %}
+                <img src="{% static 'images/Blogs/defaultUser.png' %}" alt="Default Profile Picture">
+            {% endif %}
+        </div>
+    </section>
+
+    <section style="box-shadow: 0 0 2px #0ff, 0 0 3px #0ff, 0 0 4px #0ff;">
+        <div id="metaData">
+            <div class="metaDataKids">
+                <div>
+                    <h3>{{ user.username }}</h3>
+                </div>
+                <div class="location">
+                    <img src="{% static 'images/icons/location.png' %}" alt="">
+                    <p>{{ location|default:"Location not set" }}</p>
+                </div>
+            </div>
+            <div id="numbersNcreate">
+                <div class="create">
+                    <a href="{% url 'publish_book' %}">
+                        <img src="{% static 'images/icons/create2.png' %}" alt="Publish">
+                    </a>
+                    <p>Publish New</p>
+                </div>
+                <div class="numbers">
+                    <div>
+                        <h3>{{ book_count }}</h3>
+                        <p>Books</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main >
+       
+
+        <div class="books-grid" style="padding: 40px 0; margin: 0 50px;">
+            {% if books %}
+                {% for book in books %}
+                    <a href="{% url 'book_detail' book.id %}" style="text-decoration: none; color: inherit;">
+                        <div class="books-cards">
+                            <img src="{{ book.cover.url }}" alt="{{ book.title }}" class="book-cover">
+                            <div class="books-info">
+                                <p class="author">{{ book.author }}</p>
+                                <h4 class="book-title">{{ book.title }}</h4>
+                                <p class="book-price">${{ book.price }}</p>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            {% else %}
+                <p>No books yet. Start publishing!</p>
+            {% endif %}
+        </div>
+    </main>
+
+
+    <footer>
+        <div class="footerContainer">
+            <div class="footerLinks">
+                <a href="#">About</a>
+                <a href="#">Contact</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+            <p>&copy; 2025 Quillwave. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+
+</html>
