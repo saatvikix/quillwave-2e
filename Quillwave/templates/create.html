@@ -7,8 +7,79 @@
 
 {% block styles %}
 <link rel="stylesheet" href="{% static 'css/createPage.css' %}">
+
 {% endblock %}
 
+<style>
+    .message {
+        max-width: 75%;
+        padding: 6px 6px;
+        border-radius: 4px;
+        line-height: 1.4;
+        word-wrap: break-word;
+        position: relative;
+        font-size: 12px;
+        white-space: pre-wrap;
+        font-family: 'mono';
+      }
+      
+      /* User messages (right side) */
+      .user {
+        align-self: flex-end;
+        background-color: #6bcde3;
+        box-shadow: 0 0 1px #0ff, 0 0 2px #0ff, 0 0 4px #0ff;
+        text-align: left;
+        ; /* light green */
+        color: #000;
+        font-weight: 600;
+        border-top-right-radius: 0;
+        text-align: right;
+      }
+      
+      /* Bot messages (left side) */
+      .bot {
+        align-self: flex-start;
+        background-color: #132533; /* white */
+        color: white;
+        border-top-left-radius: 0;
+        text-align: left;
+        border: 1px solid #0ff;
+      }
+      
+      #send-button {
+          background-color: #1a2b4d;
+          border: 1px solid white;
+          border-radius: 4px;
+          color: gold;
+          cursor: pointer;
+          font-size: 12px;
+          font-family: 'mono';
+         
+      }
+
+      .chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: #1a2b4d; /* Match the chat background */
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background-color: #0ff; /* Neon cyan */
+    border-radius: 3px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+    background-color: #00bcd4; /* Slightly deeper cyan on hover */
+}
+
+.chat-messages {
+    scrollbar-width: thin;
+    scrollbar-color: #0ff #1a2b4d;
+}
+
+</style>
 {% block content %}
 <div class="masterContainer">
     <a href="{% url 'home' %}">
@@ -45,10 +116,147 @@
     
 </div>
 
+
+<!-- Chatbot Toggle Button -->
+<button id="toggle-chatbot" style="
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    padding: 12px 18px;
+    background-color: #132533;
+    color: #0ff;
+    border: 1px solid #0ff;
+    border-radius: 50px;
+    cursor: pointer;
+    font-family: 'headings';
+    font-size: 14px;
+">
+    💬 Chatbot
+</button>
+
+
+<div id="chatbot-container" style="display: none; position: fixed; bottom: 70px; right: 20px; z-index: 999;">
+
+    <div class="chat-container" style="width: 340px;
+                                       margin: auto;
+                                       margin-top: 70px;
+                                       padding: 10px;
+                                       background-color: #1a2b4d;
+                                       box-shadow: 0 0 2px #0ff, 0 0 3px #0ff, 0 0 4px #0ff;
+                                      
+                                       min-height: 350px;"
+                                       >
+        <div class="chat-header" style="padding: 7px;
+                                        background-color: #1a2b4d;
+                                        font-family: 'headings';
+                                        font-size: 20px;
+                                        text-align: center">
+            ChatBot
+        </div>
+        <div class="chat-messages" id="chat-messages"
+                                    style="display: flex;
+                                        flex-direction: column;
+                                        justify-content: flex-start;
+                                        align-items: center;
+                                        padding: 12px;
+                                        min-height: 220px;
+                                        max-height: 220px;
+                                        overflow-y: hidden;
+                                        gap: 14px;
+                                        overflow-y: scroll;
+                                        background-color: #1a2b4d;"
+                                        >
+
+        </div>
+        <div class="chat-input-area" style="display:flex;
+                                            justify-content: center;
+                                            gap: 7px;
+                                            margin-top: 6px;">
+            <input type="text" id="user-input" placeholder="Type your message..." 
+                    style="background-color: #1a2b4d;
+                           border:1px solid white;
+                           border-radius: 3px;
+                           padding: 7px;
+                           width: 76%;
+                           font-family: 'mono';
+                           color: white;
+                           "
+                           />
+            <button id="send-button">Send</button>
+        </div>
+    </div>
+</div>
+  
+
+
 <script>
     document.getElementById("fileInput").addEventListener("change", function () {
         let fileName = this.files[0] ? this.files[0].name : "Choose an image";
         document.getElementById("fileLabel").textContent = fileName;
     });
 </script>
+
+
+<script>
+    const sendButton = document.getElementById('send-button');
+    const userInput = document.getElementById('user-input');
+    const chatMessages = document.getElementById('chat-messages');
+
+    sendButton.addEventListener('click', sendMessage);
+    userInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') sendMessage();
+    });
+
+    async function sendMessage() {
+      const message = userInput.value.trim();
+      if (message === '') return;
+  
+      appendMessage(message, 'user');
+      userInput.value = '';
+  
+      try {
+        const response = await fetch('http://127.0.0.1:5000/chat/response', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ message: message })
+        });
+  
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+  
+        const data = await response.json();
+        appendMessage(data.reply, 'bot');
+      } catch (err) {
+        console.error('Error:', err);
+        appendMessage('Error connecting to server.', 'bot');
+      }
+    }
+  
+    function appendMessage(text, sender) {
+      const messageDiv = document.createElement('div');
+      messageDiv.classList.add('message', sender);
+      messageDiv.innerText = text;
+      chatMessages.appendChild(messageDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+</script>
+
+<script>
+    const chatbotContainer = document.getElementById('chatbot-container');
+    const toggleChatbotButton = document.getElementById('toggle-chatbot');
+
+    toggleChatbotButton.addEventListener('click', () => {
+        if (chatbotContainer.style.display === 'none') {
+            chatbotContainer.style.display = 'block';
+        } else {
+            chatbotContainer.style.display = 'none';
+        }
+    });
+</script>
+
+
 {% endblock %}

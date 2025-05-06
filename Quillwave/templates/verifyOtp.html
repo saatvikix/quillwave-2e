@@ -6,11 +6,15 @@
     <title>Enter OTP</title>
 </head>
 <body>
-    <form action="{% url 'verify_otp' %}" method="post">
-
-        {% csrf_token %}
-        Enter <input type="text" name="otp" required>
-        <input type="submit" value="Submit">
-    </form>
+    <h2>Verify Your Email</h2>
+<form method="POST">
+    {% csrf_token %}
+    <label for="otp">Enter the OTP sent to your email:</label>
+    <input type="text" name="otp" required>
+    <button type="submit">Verify</button>
+    {% if error %}
+        <p style="color:red">{{ error }}</p>
+    {% endif %}
+</form>
 </body>
 </html>

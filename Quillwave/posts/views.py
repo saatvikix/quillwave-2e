@@ -1,29 +1,34 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
-
 # Create your views here.
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Post, Comment, Like, Bookmark
 from .forms import PostForm, CommentForm
 from django.db.models import Q
-
 from users.models import Profile
+import json
+import requests
+from django.conf import settings
+
+from types import SimpleNamespace
+
 
 def landing(request):
     if request.user.is_authenticated:
         return redirect('home')
     return render(request, 'index.html')
 
+
 @login_required
 def home(request):
     posts = Post.objects.filter(is_draft=False).order_by('-created_at')
-
     for post in posts:
         post.is_liked = post.likes.filter(user=request.user).exists()
 
-    profile = request.user.profile
-    profile_pic = profile.profile_pic.url if profile.profile_pic else None
+    profile_pic = None
+    if hasattr(request.user, 'profile') and request.user.profile.profile_pic:
+        profile_pic = request.user.profile.profile_pic.url
 
     return render(request, 'home.html', {
         'posts': posts,
@@ -32,44 +37,114 @@ def home(request):
 
 
 
+
 @login_required
 def create_post(request):
+    
+    """
+    Handle the creation of a new post by the authenticated user.
+
+    This view renders a form for creating a new post. If the request method is POST, it 
+    processes the form data and sends a POST request to the external Flask API to store 
+    the post details. If the form is valid, the user is redirected to the home page. 
+    Otherwise, the form is re-rendered with any validation errors.
+
+    Returns:
+        HttpResponse: Renders the 'create.html' template with the post form.
+    """
+
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
-        print("Form data:", request.POST)  # Debug
         if form.is_valid():
-            post = form.save(commit=False)
-            post.author = request.user
-            post.save()
-            print("Post saved:", post)
+            data = {
+                'title': form.cleaned_data['title'],
+                'body': form.cleaned_data['body'],
+                'is_draft': form.cleaned_data['is_draft'],
+                'author_id': request.user.id
+            }
+            files = {}
+            image = form.cleaned_data.get('image')
+            if image:
+                files['image'] = image
+
+            resp = requests.post(
+                settings.FLASK_API_BASE,
+                data=data,
+                files=files
+            )
+            resp.raise_for_status()
             return redirect('home')
-        else:
-            print("Form errors:", form.errors)  # 🔥 Show form validation issues
     else:
         form = PostForm()
     return render(request, 'create.html', {'form': form})
 
+
 @login_required
 def edit_post(request, post_id):
-    post = get_object_or_404(Post, id=post_id, author=request.user)
+    # Fetch the existing post via API
+    resp = requests.get(f"{settings.FLASK_API_BASE}/{post_id}")
+    resp.raise_for_status()
+    post_data = resp.json()
+
     if request.method == 'POST':
-        form = PostForm(request.POST, request.FILES, instance=post)
+        form = PostForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            data = {
+                'title': form.cleaned_data['title'],
+                'body': form.cleaned_data['body'],
+                'is_draft': form.cleaned_data['is_draft'],
+                'author_id': post_data['author_id']
+            }
+            files = {}
+            image = form.cleaned_data.get('image')
+            if image:
+                files['image'] = image
+
+            resp = requests.put(
+                f"{settings.FLASK_API_BASE}/{post_id}",
+                data=data,
+                files=files
+            )
+            resp.raise_for_status()
             return redirect('home')
     else:
-        form = PostForm(instance=post)
+        form = PostForm(initial={
+            'title': post_data['title'],
+            'body': post_data['body'],
+            'is_draft': post_data['is_draft'],
+        })
+
     return render(request, 'create.html', {
-    'form': form,
-    'editing': True,
-    'filename': post.image.name.split('/')[-1] if post.image else ''
-})
+        'form': form,
+        'editing': True,
+        'filename': post_data.get('image', '').split('/')[-1] if post_data.get('image') else ''
+    })
+
 
 @login_required
 def delete_post(request, post_id):
-    post = get_object_or_404(Post, id=post_id, author=request.user)
-    post.delete()
+    # Relay deletion via Flask API
+    resp = requests.delete(f"{settings.FLASK_API_BASE}/{post_id}")
+    if resp.status_code not in (200, 204):
+        # handle error if needed
+        pass
     return redirect('home')
+
+
+@login_required
+def view_post(request, post_id):
+    # Fetch single post from Flask API
+    resp = requests.get(f"{settings.FLASK_API_BASE}/{post_id}")
+    resp.raise_for_status()
+    post = resp.json()
+    return render(request, 'view_post.html', {'post': post})
+
+
+
+
+
+
+
 
 @login_required
 def like_post(request, post_id):
@@ -156,6 +231,4 @@ def bookmarks(request):
 
 
 
-def view_post(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
-    return render(request, 'view_post.html', {'post': post})
+

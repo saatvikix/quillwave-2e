@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'users',
     'posts',
     'Quillshelf',
+    'social_django',
+    'rest_framework',
  
 ]
 
@@ -129,12 +131,17 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-
-EMAIL_HOST_USER = 'quillwave.auth@gmail.com'
-EMAIL_HOST_PASSWORD = 'gbkhxwzgdtfngixl'  # No spaces!
+EMAIL_HOST_USER = 'kingsharthakdey@gmail.com'
+EMAIL_HOST_PASSWORD = 'henx yimp yzqi pbqp'  # Use App Password if 2FA enabled
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
 
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
+
+
+
+# settings.py
+FLASK_API_BASE = 'http://localhost:5000/api/posts'
